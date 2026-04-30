@@ -1,4 +1,7 @@
 package game.assests;
 
-public class Coin {
+public class Coin extends Asset {
+    public Coin() {
+        super("Coin", "A shiny coin found in the room.");
+    }
 }
