@@ -1,4 +1,4 @@
-package game.assests;
+package game.assets;
 
 public abstract class Asset {
     private final String name;

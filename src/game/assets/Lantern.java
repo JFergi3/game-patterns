@@ -1,4 +1,4 @@
-package game.assests;
+package game.assets;
 
 public class Lantern extends Asset {
     public Lantern() {

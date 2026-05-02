@@ -1,6 +1,6 @@
 package game.factories;
 
-import game.assests.*;
+import game.assets.*;
 
 public class AssetFactory {
 

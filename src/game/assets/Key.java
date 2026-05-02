@@ -1,4 +1,4 @@
-package game.assests;
+package game.assets;
 
 public class Key extends Asset {
     public Key() {
