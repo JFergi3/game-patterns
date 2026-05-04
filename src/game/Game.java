@@ -30,6 +30,12 @@ public class Game {
             if (input.equals("search")) {
                 action = new SearchStrategy();
             }
+            else if (input.startsWith("use")) {
+                String[] parts = input.split(" ");
+                if (parts.length > 1) {
+                    action = new UseItemStrategy(parts[1]);
+                }
+            }
             else if (input.startsWith("take")) {
                 String[] parts = input.split(" ");
                 if (parts.length > 1) {

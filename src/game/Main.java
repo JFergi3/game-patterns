@@ -22,6 +22,11 @@ public class Main {
         Player player = new Player("Player One");
         player.setCurrentRoom(entrance);
 
+        Room exit = new Room("Exit", "A locked exit door stands in front of you.");
+
+        hallway.addExit("east", exit);
+        exit.addExit("west", hallway);
+
         GameManager.getInstance().setPlayer(player);
         GameManager.getInstance().addListener(new ConsoleNotifier());
         GameManager.getInstance().addListener(new AchievementTracker());
