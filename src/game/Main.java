@@ -37,5 +37,13 @@ public class Main {
 
         ActionStrategy moveNorth = new MoveStrategy("north");
         moveNorth.execute(player);
+
+        //--Singleton Test ---
+
+        GameManager gameManager = GameManager.getInstance();
+        gameManager.setPlayer(player);
+
+        System.out.println("Game running? " + gameManager.isGameRunning());
+        System.out.println("Current player: " + gameManager.getPlayer().getName());
     }
 }
