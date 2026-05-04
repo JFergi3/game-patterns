@@ -1,165 +1,110 @@
 # Game Patterns
 
-A simple Java text-based adventure game built to demonstrate core software architecture concepts and design patterns.
+A simple Java text-based adventure game built to demonstrate software design principles and patterns.
 
----
+## What the Program Implements
+
+- GRASP / Encapsulation / SOLID
+- Strategy Pattern
+- Singleton Pattern
+- Factory Method Pattern
+- Additional Pattern: Observer Pattern
+- JUnit testing
+
+## Current Architecture
+
+- `Main`  
+  Application entry point. Starts the game with:
+    - `new RunGame().createGame().start();`
+
+- `RunGame`  
+  Handles setup:
+    - creates rooms and exits
+    - creates assets with `AssetFactory`
+    - creates the player and starting room
+    - registers observers in `GameManager`
+    - returns a ready `Game` instance
+
+- `Game`  
+  Runs the input loop and command handling (`search`, `take`, `move`, `use`, `quit`).
+
+- `GameManager`  
+  Stores shared game state (`Player`, game running flag) and dispatches events to observers.
+
+- `ActionService`  
+  Executes actions through the `ActionStrategy` abstraction.
 
 ## Design Patterns Used
 
 ### Strategy Pattern
-Defines a family of interchangeable behaviors for player actions.
+Player actions are implemented through the `ActionStrategy` interface with interchangeable strategies:
 
-- Implemented via `ActionStrategy`
-- Concrete strategies:
-    - `SearchStrategy`
-    - `MoveStrategy`
-    - `TakeAssetStrategy`
-    - `UseItemStrategy`
+- `SearchStrategy`
+- `MoveStrategy`
+- `TakeAssetStrategy`
+- `UseItemStrategy`
 
-**Benefit:**  
-New actions can be added without modifying existing game logic.
-
----
+`Game` selects a strategy based on user input, then `ActionService` executes it.
 
 ### Singleton Pattern
-Ensures only one instance of a class exists and provides a global access point.
-
-- Implemented by `GameManager`
-
-**Benefit:**  
-Maintains a single shared game state across the entire application.
-
----
+`GameManager` is implemented as a singleton (`getInstance()`), ensuring one shared game state object.
 
 ### Factory Method Pattern
-Encapsulates object creation logic.
+`AssetFactory` creates assets from a type string:
 
-- Implemented by `AssetFactory`
-- Creates: `Key`, `Coin`, `Lantern`
+- `Key`
+- `Coin`
+- `Lantern`
 
-**Benefit:**  
-Centralizes creation logic and removes direct dependency on concrete classes.
+This centralizes object creation and keeps setup code cleaner.
 
----
+### Additional Pattern: Observer Pattern
+`GameManager` notifies listeners when game events happen.
 
-### Observer Pattern
-Defines a one-to-many relationship where objects are notified of state changes.
-
-- `GameEventListener` (interface)
-- `ConsoleNotifier`, `AchievementTracker` (observers)
+- `GameEventListener` (observer interface)
+- `ConsoleNotifier` and `AchievementTracker` (observers)
 - `GameManager` (subject)
 
-**Benefit:**  
-Decouples event handling from core game logic.
-
----
-
-### JUnit
-Unit testing framework used to validate functionality.
-
-**Tests include:**
-- Factory creation (`AssetFactoryTest`)
-- Player inventory (`PlayerTest`)
-- Room navigation (`RoomTest`)
-- Singleton behavior (`GameManagerTest`)
-- Win condition (`UseItemStrategyTest`)
-
----
+This decouples event reactions from core gameplay logic.
 
 ## Core Principles Used
 
-### GRASP (General Responsibility Assignment Software Patterns)
-
-- **Controller:**  
-  `GameManager` acts as the central coordinator for game state and events.
-
-- **Low Coupling / High Cohesion:**  
-  Classes are focused and loosely connected (e.g., strategies handle actions, factory handles creation).
-
----
+### GRASP
+- **Controller:** `GameManager` coordinates shared state and notifications.
+- **Low Coupling / High Cohesion:** responsibilities are split across focused classes (setup, loop, actions, factory, observers).
 
 ### Encapsulation
+- Classes keep state private and expose behavior through methods.
+- Examples:
+    - `Player` manages inventory/current room
+    - `Room` manages assets/exits
+    - `GameManager` manages global game state
 
-Encapsulation is achieved by:
+### SOLID
 
-- Keeping fields `private`
-- Exposing behavior through public methods
-- Controlling access to internal state
+- **S (Single Responsibility):**  
+  `Player`, `Room`, `AssetFactory`, `Game`, `RunGame`, and each strategy class each have a clear role.
 
-**Examples:**
-- `Player` manages inventory internally
-- `Room` controls assets and exits
-- `GameManager` controls global state
+- **O (Open/Closed):**  
+  New actions can be added by implementing `ActionStrategy` without major changes to the game loop.
 
----
+- **L (Liskov Substitution):**  
+  Any `ActionStrategy` implementation can be used wherever `ActionStrategy` is expected.
 
-### SOLID Principles
+- **I (Interface Segregation):**  
+  `ActionStrategy` and `GameEventListener` are small, focused interfaces.
 
-#### S — Single Responsibility Principle
-Each class has one responsibility:
-- `Player` → player data
-- `Room` → room structure
-- `AssetFactory` → object creation
-- `Game` → game loop
-- `GameSetup` → game initialization
+- **D (Dependency Inversion):**  
+  `ActionService` depends on the `ActionStrategy` abstraction, not concrete action classes.
 
----
+## Testing (JUnit)
 
-#### O — Open/Closed Principle
-Classes are open for extension but closed for modification.
+Tests are in `src/test/game`:
 
-**Example:**  
-New actions can be added by implementing `ActionStrategy` without modifying existing code.
+- `AssetFactoryTest`
+- `PlayerTest`
+- `RoomTest`
+- `GameManagerTest`
+- `UseItemStrategyTest`
 
----
-
-#### L — Liskov Substitution Principle
-Subtypes can replace their base types without breaking behavior.
-
-**Example:**  
-Any `ActionStrategy` implementation can be used interchangeably in the game loop.
-
----
-
-#### I — Interface Segregation Principle
-Interfaces are kept small and focused.
-
-**Example:**  
-`ActionStrategy` only defines one method: `execute(Player)`.
-
----
-
-#### D — Dependency Inversion Principle
-High-level modules depend on abstractions, not concrete implementations.
-
-**Example:**
-- `Game` and `ActionService` depend on `ActionStrategy`
-- Strategies implement the abstraction
-
----
-
-## Architecture Overview
-
-- `Main` → entry point (minimal, delegates setup)
-- `GameSetup` → initializes rooms, player, and game state
-- `Game` → handles input and game loop
-- `GameManager` → shared state (Singleton)
-- `ActionService` → executes actions via abstraction (DIP)
-- `AssetFactory` → creates assets
-- Strategies → handle player behavior
-- Observers → handle event notifications
-
----
-
-## Summary
-
-This project demonstrates:
-
-- Clean separation of concerns
-- Use of multiple design patterns together
-- Strong adherence to SOLID and encapsulation principles
-- Flexible and extensible architecture
-
----
-
-## TLDR
+These cover factory behavior, inventory, room exits, singleton behavior, and win condition logic.
