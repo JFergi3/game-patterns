@@ -1,58 +1,165 @@
 # Game Patterns
 
-Simple Java text adventure project used to practice design patterns.
+A simple Java text-based adventure game built to demonstrate core software architecture concepts and design patterns.
+
+---
 
 ## Design Patterns Used
 
-**Strategy Pattern**  
-Used for player actions such as searching, moving, taking assets, and using items.
+### Strategy Pattern
+Defines a family of interchangeable behaviors for player actions.
 
-**Singleton Pattern**  
-`GameManager` controls shared game state and only allows one instance.
+- Implemented via `ActionStrategy`
+- Concrete strategies:
+    - `SearchStrategy`
+    - `MoveStrategy`
+    - `TakeAssetStrategy`
+    - `UseItemStrategy`
 
-**Factory Method Pattern**  
-`AssetFactory` creates assets such as `Key`, `Coin`, and `Lantern`.
+**Benefit:**  
+New actions can be added without modifying existing game logic.
 
-**Observer Pattern**  
-`GameManager` notifies listeners when events happen, such as collecting an item or winning the game.
+---
 
-**JUnit**  
-Tests verify the factory, player inventory, room exits, singleton behavior, and win condition.
+### Singleton Pattern
+Ensures only one instance of a class exists and provides a global access point.
 
-## Required Concepts and How They Are Used
+- Implemented by `GameManager`
 
-### GRASP / Encapsulation / SOLID
-- **Encapsulation:** `Player`, `Room`, and `GameManager` keep internal state private and expose behavior through methods.
-- **GRASP (Controller):** `GameManager` acts as the central controller for shared game state and event flow.
-- **SOLID (Single Responsibility):** each class has one main job (`Player`, `Room`, `AssetFactory`, and each strategy class).
-- **SOLID (Open/Closed):** new player actions can be added by creating a new `ActionStrategy` implementation without changing the core loop much.
+**Benefit:**  
+Maintains a single shared game state across the entire application.
 
-### The Strategy Pattern
-The game uses `ActionStrategy` for player actions.  
-Current strategies include:
-- `SearchStrategy`
-- `MoveStrategy`
-- `TakeAssetStrategy`
-- `UseItemStrategy`
+---
 
-`Game` chooses the correct strategy based on the user command.
+### Factory Method Pattern
+Encapsulates object creation logic.
 
-### The Singleton Pattern
-`GameManager` uses `getInstance()` so the game has one shared manager instance.
+- Implemented by `AssetFactory`
+- Creates: `Key`, `Coin`, `Lantern`
 
-### The Factory Method
-`AssetFactory` centralizes creation of assets such as `Key`, `Coin`, and `Lantern`.
+**Benefit:**  
+Centralizes creation logic and removes direct dependency on concrete classes.
 
-### An Additional Pattern (10 points Extra)
-The project uses the **Observer Pattern**:
-- `GameEventListener` defines the observer interface.
-- `ConsoleNotifier` and `AchievementTracker` are observers.
-- `GameManager` notifies observers when events occur (item pickup, win event).
+---
+
+### Observer Pattern
+Defines a one-to-many relationship where objects are notified of state changes.
+
+- `GameEventListener` (interface)
+- `ConsoleNotifier`, `AchievementTracker` (observers)
+- `GameManager` (subject)
+
+**Benefit:**  
+Decouples event handling from core game logic.
+
+---
 
 ### JUnit
-JUnit tests in `src/test/game` validate:
-- factory behavior (`AssetFactoryTest`)
-- inventory behavior (`PlayerTest`)
-- room exits (`RoomTest`)
-- singleton behavior (`GameManagerTest`)
-- win condition (`UseItemStrategyTest`)
+Unit testing framework used to validate functionality.
+
+**Tests include:**
+- Factory creation (`AssetFactoryTest`)
+- Player inventory (`PlayerTest`)
+- Room navigation (`RoomTest`)
+- Singleton behavior (`GameManagerTest`)
+- Win condition (`UseItemStrategyTest`)
+
+---
+
+## Core Principles Used
+
+### GRASP (General Responsibility Assignment Software Patterns)
+
+- **Controller:**  
+  `GameManager` acts as the central coordinator for game state and events.
+
+- **Low Coupling / High Cohesion:**  
+  Classes are focused and loosely connected (e.g., strategies handle actions, factory handles creation).
+
+---
+
+### Encapsulation
+
+Encapsulation is achieved by:
+
+- Keeping fields `private`
+- Exposing behavior through public methods
+- Controlling access to internal state
+
+**Examples:**
+- `Player` manages inventory internally
+- `Room` controls assets and exits
+- `GameManager` controls global state
+
+---
+
+### SOLID Principles
+
+#### S — Single Responsibility Principle
+Each class has one responsibility:
+- `Player` → player data
+- `Room` → room structure
+- `AssetFactory` → object creation
+- `Game` → game loop
+- `GameSetup` → game initialization
+
+---
+
+#### O — Open/Closed Principle
+Classes are open for extension but closed for modification.
+
+**Example:**  
+New actions can be added by implementing `ActionStrategy` without modifying existing code.
+
+---
+
+#### L — Liskov Substitution Principle
+Subtypes can replace their base types without breaking behavior.
+
+**Example:**  
+Any `ActionStrategy` implementation can be used interchangeably in the game loop.
+
+---
+
+#### I — Interface Segregation Principle
+Interfaces are kept small and focused.
+
+**Example:**  
+`ActionStrategy` only defines one method: `execute(Player)`.
+
+---
+
+#### D — Dependency Inversion Principle
+High-level modules depend on abstractions, not concrete implementations.
+
+**Example:**
+- `Game` and `ActionService` depend on `ActionStrategy`
+- Strategies implement the abstraction
+
+---
+
+## Architecture Overview
+
+- `Main` → entry point (minimal, delegates setup)
+- `GameSetup` → initializes rooms, player, and game state
+- `Game` → handles input and game loop
+- `GameManager` → shared state (Singleton)
+- `ActionService` → executes actions via abstraction (DIP)
+- `AssetFactory` → creates assets
+- Strategies → handle player behavior
+- Observers → handle event notifications
+
+---
+
+## Summary
+
+This project demonstrates:
+
+- Clean separation of concerns
+- Use of multiple design patterns together
+- Strong adherence to SOLID and encapsulation principles
+- Flexible and extensible architecture
+
+---
+
+## TLDR
