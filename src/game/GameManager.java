@@ -1,5 +1,9 @@
 package game;
 
+import game.observers.GameEventListener;
+import java.util.ArrayList;
+import java.util.List;
+
 public class GameManager {
     private static GameManager instance;
 
@@ -31,5 +35,17 @@ public class GameManager {
 
     public void stopGame() {
         gameRunning = false;
+    }
+
+    private List<GameEventListener> listeners = new ArrayList<>();
+
+    public void addListener(GameEventListener listener) {
+        listeners.add(listener);
+    }
+
+    public void notifyListeners(String message) {
+        for (GameEventListener listener : listeners) {
+            listener.onEvent(message);
+        }
     }
 }
