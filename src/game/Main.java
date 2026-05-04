@@ -2,6 +2,7 @@ package game;
 
 import game.assets.Asset;
 import game.factories.AssetFactory;
+import game.strategies.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -23,5 +24,18 @@ public class Main {
         System.out.println(player.getCurrentRoom().getDescription());
         System.out.println("Room has: " + key.getName());
         System.out.println("North leads to: " + entrance.getExit("north").getName());
+
+        //--Strategy Test ---
+
+        ActionStrategy search = new SearchStrategy();
+        search.execute(player);
+
+        ActionStrategy takeKey = new TakeAssetStrategy("key");
+        takeKey.execute(player);
+
+        System.out.println("Has key? " + player.hasAsset("key"));
+
+        ActionStrategy moveNorth = new MoveStrategy("north");
+        moveNorth.execute(player);
     }
 }
