@@ -24,6 +24,7 @@ public class Game {
             System.out.println(player.getCurrentRoom().getDescription());
 
             System.out.print("Enter command (search, take, move, use, quit): ");
+
             String input = scanner.nextLine().toLowerCase();
 
             ActionStrategy action = null;
