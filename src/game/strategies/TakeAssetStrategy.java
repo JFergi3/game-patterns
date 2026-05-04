@@ -1,5 +1,6 @@
 package game.strategies;
 
+import game.GameManager;
 import game.Player;
 import game.Room;
 import game.assets.Asset;
@@ -20,6 +21,7 @@ public class TakeAssetStrategy implements ActionStrategy {
                 player.addAsset(asset);
                 room.removeAsset(asset);
                 System.out.println("You picked up: " + asset.getName());
+                GameManager.getInstance().notifyListeners("Player picked up " + asset.getName());
                 return;
             }
         }
