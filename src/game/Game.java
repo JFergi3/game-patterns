@@ -1,5 +1,6 @@
 package game;
 
+import game.services.ActionService;
 import game.strategies.*;
 import java.util.Scanner;
 
@@ -55,7 +56,8 @@ public class Game {
             }
 
             if (action != null) {
-                action.execute(player);
+                ActionService actionService = new ActionService(action);
+                actionService.performAction(player);
             } else {
                 System.out.println("Invalid command.");
             }
